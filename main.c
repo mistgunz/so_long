@@ -9,13 +9,41 @@
 /*   Updated: 2022/07/02 07:52:38 by rnait-el         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+#include <stdlib.h>
+#include <mlx.h>
 
-int strlen(char *str)
+typedef struct	s_data {
+	void	*img;
+	char	*addr;
+	int		bits_per_pixel;
+	int		line_length;
+	int		endian;
+}				t_data;
+
+void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 {
-    int i;
+	char	*dst;
 
-    i = 0;
-    while (str[i])
-        i++;
-    return (i);
+	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
+	*(unsigned int*)dst = color;
 }
+
+int main(void)
+{
+	void	*mlx 	;
+	void	*mlx_win 	;	
+	t_data	img 	;
+	
+	mlx = mlx_init();
+	mlx_win = mlx_new_window(mlx , 1920, 1080, "mlx window");
+	img.img = mlx_new_image(mlx, 1920, 1080);
+	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length, &img.endian);
+	my_mlx_pixel_put(&img, 5, 5, 0xFF0000);
+	mlx_put_image_to_window(mlx, mlx_win, img.img, 0, 0);
+
+	mlx_loop(mlx);
+	
+}
+
+
+
