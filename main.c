@@ -12,6 +12,12 @@
 #include <stdlib.h>
 #include <mlx.h>
 
+#define WIDTH 1920
+#define HEIGHT 1080
+#define RED 0xFF0000
+#define GREEN 0x00FF00
+#define BLUE 0x0000FF
+
 typedef struct	s_data {
 	void	*img;
 	char	*addr;
@@ -28,6 +34,38 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 	*(unsigned int*)dst = color;
 }
 
+void drawline(t_data *data, int x1, int y1, int x2, int y2)
+{
+	int		dx;
+	int		dy;
+	int		sx;
+	int		sy;
+	int		err;
+	int		e2;
+
+	dx = abs(x2 - x1);
+	dy = abs(y2 - y1);
+	sx = x1 < x2 ? 1 : -1;
+	sy = y1 < y2 ? 1 : -1;
+	err = dx - dy;
+	while (1)
+	{
+		my_mlx_pixel_put(data, x1, y1, GREEN);
+		if (x1 == x2 && y1 == y2)
+			break ;
+		e2 = 2 * err;
+		if (e2 > -dy)
+		{
+			err = err - dy;
+			x1 = x1 + sx;
+		}
+		if (e2 < dx)
+		{
+			err = err + dx;
+			y1 = y1 + sy;
+		}
+	}
+}
 int main(void)
 {
 	void	*mlx 	;
@@ -38,7 +76,7 @@ int main(void)
 	mlx_win = mlx_new_window(mlx , 1920, 1080, "mlx window");
 	img.img = mlx_new_image(mlx, 1920, 1080);
 	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length, &img.endian);
-	my_mlx_pixel_put(&img, 80, 90, 0x00FF0000);
+	drawline(&img, 1000, 1000, 1920, 1080);
 	mlx_put_image_to_window(mlx, mlx_win, img.img, 0, 0);
 
 	mlx_loop(mlx);
