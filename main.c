@@ -66,6 +66,15 @@ void drawline(t_data *data, int x1, int y1, int x2, int y2)
 		}
 	}
 }
+void draw_square(t_data *data)
+{
+	drawline(data, 100, 100, 200, 100);
+	drawline(data, 200, 100, 200, 200);
+	drawline(data, 200, 200, 100, 200);
+	drawline(data, 100, 200, 100, 100);
+}
+
+
 int main(void)
 {
 	void	*mlx 	;
@@ -77,6 +86,7 @@ int main(void)
 	img.img = mlx_new_image(mlx, 1920, 1080);
 	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length, &img.endian);
 	drawline(&img, 1000, 1000, 1920, 1080);
+	draw_square(&img);
 	mlx_put_image_to_window(mlx, mlx_win, img.img, 0, 0);
 
 	mlx_loop(mlx);
