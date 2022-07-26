@@ -46,6 +46,11 @@ int	close(int keycode, t_vars *vars)
 	mlx_destroy_window(vars->mlx, vars->win);
 	return (0);
 }
+int	close2(int keycode, t_vars *vars)
+{
+	mlx_destroy_window(vars->mlx, vars->win);
+	return (0);
+}
 
 int main(void)
 {
@@ -59,7 +64,9 @@ int main(void)
 	img.img = mlx_new_image(vars.mlx, WIDTH, HEIGHT);
 	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length, &img.endian);
 	mlx_put_image_to_window(vars.mlx, vars.win, img.img, 0, 0);
-	mlx_hook(vars.win, 2, 1L<<0, close, &vars);
+	//mlx_hook(vars.win, 2, 1L<<0, &close, &vars);
+	mlx_key_hook(vars.win, &close, &vars);
+	mlx_mouse_hook(vars.win, &close, &vars);
 	mlx_loop(vars.mlx);
 	
 	
