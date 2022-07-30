@@ -117,29 +117,41 @@ int	create_trgb(int t, int r, int g, int b)
 	return (t << 24 | r << 16 | g << 8 | b);
 }
 
+int add_shade(float dist, int color)
+{
+	int r, g, b;
+	r = (color >> 16) & 0xFF;
+	g = (color >> 8) & 0xFF;
+	b = color & 0xFF;
+	r = r * dist ;
+	g = g * dist ;
+	b = b * dist ;
+	return (create_trgb(0, r, g, b));
+}
+
+
 
 void fill_win(t_data *data)
 {	
 	int x,y,i,j;
 
-	i = 0;
+	i = 255;
 	y = 0;
 	while(y < HEIGHT)
 	{
 		x = 0;
 		while(x < WIDTH)
 		{
-			my_mlx_pixel_put(data, x, y, create_trgb(0, 0, 0, i));
+			my_mlx_pixel_put(data, x, y,add_shade( 1,create_trgb(1, 0,250, 0)));
 			x++;
 		}
 		y++;
-		if (y % 10 == 0)
-			i++;
-
-	printf("%d\n",i);
-		
+		//if (y % 10 == 0)
+		//	i++;
 	}
 }
+
+
 
 
 
@@ -163,6 +175,7 @@ int main(void)
 	//draw_hexagone(0, 0, 0 , HEIGHT / 2, WIDTH / 2 + 200, HEIGHT / 2, WIDTH / 2 + 300, HEIGHT / 2, &img);
 	//draw_triangle(0, 0, 200, 200, 0, 100, &img);
 	fill_win(&img);
+	printf("%X\n", create_trgb(0, 255, 0, 0));	
 	mlx_put_image_to_window(vars.mlx, vars.win, img.img, 0, 0);
 	mlx_key_hook(vars.win, &close, &vars);
 	mlx_mouse_hook(vars.win,&mouse, &vars);
