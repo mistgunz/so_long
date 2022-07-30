@@ -110,6 +110,39 @@ void draw_hexagone(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y
 	draw_line(x3, y3, x4, y4, data);
 	draw_line(x4, y4, x1, y1, data);
 }
+
+
+int	create_trgb(int t, int r, int g, int b)
+{
+	return (t << 24 | r << 16 | g << 8 | b);
+}
+
+
+void fill_win(t_data *data)
+{	
+	int x,y,i,j;
+
+	i = 0;
+	y = 0;
+	while(y < HEIGHT)
+	{
+		x = 0;
+		while(x < WIDTH)
+		{
+			my_mlx_pixel_put(data, x, y, create_trgb(0, 0, 0, i));
+			x++;
+		}
+		y++;
+		if (y % 10 == 0)
+			i++;
+
+	printf("%d\n",i);
+		
+	}
+}
+
+
+
 int main(void)
 {
 	
@@ -124,14 +157,13 @@ int main(void)
 	img.img = mlx_new_image(vars.mlx, WIDTH, HEIGHT);
 	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length, &img.endian);
 	
-	mlx_put_image_to_window(vars.mlx, vars.win, img.img, 0, 0);
+	//mlx_put_image_to_window(vars.mlx, vars.win, img.img, 0, 0);
 	//draw_circle(WIDTH / 2, HEIGHT / 2, 100, &img);
 	//draw_line(WIDTH / 2, HEIGHT / 2, WIDTH / 2 + 100, HEIGHT / 2, &img);
-	draw_hexagone(0, 0, 0 , HEIGHT / 2, WIDTH / 2 + 200, HEIGHT / 2, WIDTH / 2 + 300, HEIGHT / 2, &img);
-	draw_triangle(0, 0, 200, 200, 0, 100, &img);
-	
-
-	
+	//draw_hexagone(0, 0, 0 , HEIGHT / 2, WIDTH / 2 + 200, HEIGHT / 2, WIDTH / 2 + 300, HEIGHT / 2, &img);
+	//draw_triangle(0, 0, 200, 200, 0, 100, &img);
+	fill_win(&img);
+	mlx_put_image_to_window(vars.mlx, vars.win, img.img, 0, 0);
 	mlx_key_hook(vars.win, &close, &vars);
 	mlx_mouse_hook(vars.win,&mouse, &vars);
 	mlx_loop(vars.mlx);
