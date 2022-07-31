@@ -13,7 +13,7 @@
 #include <mlx.h>
 #include <stdio.h>
 #include <math.h>
-#include "ft_itoa.c"
+
 
 #define WIDTH 1920
 #define HEIGHT 1080
@@ -33,6 +33,15 @@ typedef struct	s_vars {
 	void	*mlx;
 	void	*win;
 }				t_vars;
+
+typedef struct ghost 
+{
+	void *imgg;
+	char * path;
+	int widht;
+	int hight;/* data */
+} ghost;
+
 
 void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 {
@@ -129,25 +138,36 @@ int add_shade(float dist, int color)
 	return (create_trgb(0, r, g, b));
 }
 
+int invert_clore(int color)
+{
+	int r, g, b;
+	r = (color >> 16) & 0xFF;
+	g = (color >> 8) & 0xFF;
+	b = color & 0xFF;
+	return (create_trgb(0, 255 - r, 255 - g, 255 - b));
+}
+
+
+
 
 
 void fill_win(t_data *data)
 {	
 	int x,y,i,j;
 
-	i = 255;
+	i = 0;
 	y = 0;
 	while(y < HEIGHT)
 	{
 		x = 0;
 		while(x < WIDTH)
 		{
-			my_mlx_pixel_put(data, x, y,add_shade( 1,create_trgb(1, 0,250, 0)));
+			my_mlx_pixel_put(data, x, y, create_trgb(0, 0,0, i));
 			x++;
 		}
 		y++;
-		//if (y % 10 == 0)
-		//	i++;
+		if (y % 10 == 0)
+			i++;
 	}
 }
 
@@ -160,29 +180,27 @@ int main(void)
 	
 	t_data	img 	;
 	t_vars 	vars 	;
+	ghost 	ghost 	;
 
-	
-	
-	
+	ghost.path = "./ghost_down1.xpm";
+
 	vars.mlx = mlx_init();
 	vars.win = mlx_new_window(vars.mlx, WIDTH, HEIGHT, "mlx window");
 	img.img = mlx_new_image(vars.mlx, WIDTH, HEIGHT);
 	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length, &img.endian);
+	fill_win(&img);
 	
-	//mlx_put_image_to_window(vars.mlx, vars.win, img.img, 0, 0);
-	//draw_circle(WIDTH / 2, HEIGHT / 2, 100, &img);
+	mlx_put_image_to_window(vars.mlx, vars.win, img.img, 0, 0);
+	draw_circle(WIDTH / 2, HEIGHT / 2, 100, &img);
 	//draw_line(WIDTH / 2, HEIGHT / 2, WIDTH / 2 + 100, HEIGHT / 2, &img);
 	//draw_hexagone(0, 0, 0 , HEIGHT / 2, WIDTH / 2 + 200, HEIGHT / 2, WIDTH / 2 + 300, HEIGHT / 2, &img);
 	//draw_triangle(0, 0, 200, 200, 0, 100, &img);
-	fill_win(&img);
-	printf("%X\n", create_trgb(0, 255, 0, 0));	
-	mlx_put_image_to_window(vars.mlx, vars.win, img.img, 0, 0);
+	ghost.imgg = mlx_xpm_file_to_image(vars.mlx, ghost.path, &ghost.widht, &ghost.hight);
+	
+	mlx_put_image_to_window(vars.mlx, vars.win, ghost.imgg, WIDTH/2, HEIGHT/2);
 	mlx_key_hook(vars.win, &close, &vars);
 	mlx_mouse_hook(vars.win,&mouse, &vars);
-	mlx_loop(vars.mlx);
-	
-	
-	
+	mlx_loop(vars.mlx);	
 }
 
 
