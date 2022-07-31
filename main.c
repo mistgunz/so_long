@@ -66,59 +66,6 @@ int mouse(int button, int x, int y, t_vars *vars)
 	return (0);
 }
 
-void draw_circle(int x, int y , int r, t_data *data )
-{
-	int ang = 0;
-	int step = 1;
-	while (ang < 360)
-	{
-		my_mlx_pixel_put(data, x + r * cos(ang * M_PI / 180), y + r * sin(ang * M_PI / 180), RED);
-		ang += step;
-	}
-
-}
-void draw_line(int x1, int y1, int x2, int y2, t_data *data)
-{
-
-
-	int dx = abs(x2 - x1);
-	int dy = abs(y2 - y1);
-	int sx = x1 < x2 ? 1 : -1;
-	int sy = y1 < y2 ? 1 : -1;
-	int err = dx - dy;
-	while (1)
-	{
-		my_mlx_pixel_put(data, x1, y1, RED);
-		if (x1 == x2 && y1 == y2)
-			break;
-		int e2 = 2 * err;
-		if (e2 > -dy)
-		{
-			err -= dy;
-			x1 += sx;
-		}
-		if (e2 < dx)
-		{
-			err += dx;
-			y1 += sy;
-		}
-	}
-}
-
-void draw_triangle(int x1, int y1, int x2, int y2, int x3, int y3, t_data *data)
-{
-	draw_line(x1, y1, x2, y2, data);
-	draw_line(x2, y2, x3, y3, data);
-	draw_line(x3, y3, x1, y1, data);
-}
-
-void draw_hexagone(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4, t_data *data)
-{
-	draw_line(x1, y1, x2, y2, data);
-	draw_line(x2, y2, x3, y3, data);
-	draw_line(x3, y3, x4, y4, data);
-	draw_line(x4, y4, x1, y1, data);
-}
 
 
 int	create_trgb(int t, int r, int g, int b)
@@ -126,50 +73,8 @@ int	create_trgb(int t, int r, int g, int b)
 	return (t << 24 | r << 16 | g << 8 | b);
 }
 
-int add_shade(float dist, int color)
-{
-	int r, g, b;
-	r = (color >> 16) & 0xFF;
-	g = (color >> 8) & 0xFF;
-	b = color & 0xFF;
-	r = r * dist ;
-	g = g * dist ;
-	b = b * dist ;
-	return (create_trgb(0, r, g, b));
-}
-
-int invert_clore(int color)
-{
-	int r, g, b;
-	r = (color >> 16) & 0xFF;
-	g = (color >> 8) & 0xFF;
-	b = color & 0xFF;
-	return (create_trgb(0, 255 - r, 255 - g, 255 - b));
-}
 
 
-
-
-
-void fill_win(t_data *data)
-{	
-	int x,y,i,j;
-
-	i = 0;
-	y = 0;
-	while(y < HEIGHT)
-	{
-		x = 0;
-		while(x < WIDTH)
-		{
-			my_mlx_pixel_put(data, x, y, create_trgb(0, 0,0, i));
-			x++;
-		}
-		y++;
-		if (y % 10 == 0)
-			i++;
-	}
-}
 
 
 
