@@ -6,10 +6,10 @@
 /*   By: rnait-el <rnait-el@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 07:52:37 by rnait-el          #+#    #+#             */
-/*   Updated: 2022/07/02 07:52:38 by rnait-el         ###   ########.fr       */
+/*   Updated: 2022/08/15 23:47:15 by rnait-el         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include <stdlib.h>
+
 #include <mlx.h>
 #include <stdio.h>
 #include <math.h>
@@ -90,6 +90,39 @@ int	create_trgb(int t, int r, int g, int b)
 	return (t << 24 | r << 16 | g << 8 | b);
 }
 
+void draw_line(t_data *data, int x1, int y1, int x2, int y2, int color)
+{
+	int dx = abs(x2 - x1);
+	int dy = abs(y2 - y1);
+	int sx = x1 < x2 ? 1 : -1;
+	int sy = y1 < y2 ? 1 : -1;
+	int err = (dx > dy ? dx : -dy) / 2;
+	while (1)
+	{
+		my_mlx_pixel_put(data, x1, y1, color);
+		if (x1 == x2 && y1 == y2)
+			break ;
+		int e2 = err;
+		if (e2 > -dx)
+		{
+			err -= dy;
+			x1 += sx;
+		}
+		if (e2 < dy)
+		{
+			err += dx;
+			y1 += sy;
+		}
+	}
+}
+
+void draw_squar(t_data *data, int x, int y, int color)
+{
+	draw_line(data, x, y, x + 100, y, color);
+	draw_line(data, x, y, x, y + 100, color);
+	draw_line(data, x, y + 100, x + 100, y + 100, color);
+	draw_line(data, x + 100, y, x + 100, y + 100, color);
+}
 
 
 int main(void)
